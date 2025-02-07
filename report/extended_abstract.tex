@@ -1,0 +1,43 @@
+\documentclass[a4paper, 12pt]{article}
+\begin{document}
+\title{ACTOR: Analog Circuit Test Optimization through Reinforcement Learning}
+
+\maketitle
+
+\paragraph
+{\bf Group Members:} Ankush, Sanjana Ganesh Nayak, Kalyan, Kyle Pawlowski
+
+\paragraph
+{\bf Goal:}
+Develop an automated optimization framework for analog circuit design that efficiently sets design parameters using machine learning and reinforcement learning, providing performance robustness across process variations while minimizing manual intervention.
+
+\paragraph
+{\bf Motivation:}
+Analog circuit design requires balancing performance, efficiency, and robustness. This project focuses on the automatic tuning of design parameters in analog integrated circuits to meet specific performance requirements. Inspired by the work in Design and Optimization of Low-Dropout Voltage Regulator Using Relational Graph Neural Network and Reinforcement Learning in Open-Source SKY130 Process, which employs a relational graph convolutional network (RGCN) for RL-driven optimization, this project extends RL-based tuning by integrating SVD-based cost metrics and Simulated Annealing. By leveraging machine learning models like MARS or RNNs alongside an RL feedback loop, we aim to automate circuit optimization, enhancing performance while minimizing manual intervention.
+
+\paragraph
+{\bf Plan of work:}
+First, we use a test generation algorithm to create input signals that stimulate all possible independent behaviors of the device under test (DUT). The cost metric is defined as the sum of squares of the matrix eigenvalues obtained via Singular Value Decomposition (SVD) from process-perturbed devices generated through Monte Carlo simulations. Maximizing this metric enhances the independent behaviors of the DUT’s time-domain response across different process corners. The input stimulus is then optimized using Genetic Algorithms (GA) or Simulated Annealing.
+
+Next, we develop a Machine Learning model, such as Multi-layer Adaptive Regression Splines (MARS) or an alternative Recurrent Neural Network (RNN), to establish a mapping between the DUT’s output response and its performance specifications. This model enables the prediction and evaluation of the device’s performance for new simulations or fabricated devices.
+
+Finally, we integrate a Reinforcement Learning (RL) feedback loop. The RL agent continuously adjusts circuit parameters based on predictions from the ML model, optimizing the design iteratively. This feedback mechanism allows for automated fine-tuning, ensuring the device meets performance goals without the need for extensive manual intervention.
+
+\paragraph
+{\bf Potential Pitfalls:}
+May not completely generalise for unseen process variations
+Will not be verified against real ICs
+There could exist important design parameters which are not seen in the output signal (e.g. quiescent current, power rating, heat dissipation)
+
+\paragraph
+{\bf Timeline:}
+Feb 7th- Extended Abstract finished
+Feb 28th - Dataset generated
+Mar 14th - Design parameter estimation model trained
+Mar 28th- RL feedback loop completed
+Apr 7th - Results finalized 
+Apr 14th- Final Presentation
+Apr 25th- Final Report
+
+
+\end{document}
