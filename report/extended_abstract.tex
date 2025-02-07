@@ -5,11 +5,12 @@
 \maketitle
 
 \paragraph
-{\bf Group Members:} Ankush, Sanjana Ganesh Nayak, Kalyan, Kyle Pawlowski
+{\bf Group Members:} Ankush Sharma, Sanjana Ganesh Nayak, Kalyan Nimishakavi, Kyle Pawlowski
+ 
 
 \paragraph
 {\bf Goal:}
-Develop an automated optimization framework for analog circuit design that efficiently sets design parameters using machine learning and reinforcement learning, providing performance robustness across process variations while minimizing manual intervention.
+Develop an automated framework for analog circuit design that optimizes design parameters through reinforcement learning. A set of excitation inputs will be generated to provide a robust sample of circuit behavior. Feedback to the reinforcement learning model will be provided by a machine learning model trained to translate the output response to design specifications reducing the number of simulations needed. 
 
 \paragraph
 {\bf Motivation:}
@@ -25,18 +26,34 @@ Finally, we integrate a Reinforcement Learning (RL) feedback loop. The RL agent 
 
 \paragraph
 {\bf Potential Pitfalls:}
-May not completely generalise for unseen process variations
-Will not be verified against real ICs
-There could exist important design parameters which are not seen in the output signal (e.g. quiescent current, power rating, heat dissipation)
-
+\begin{itemize}
+	\item May not completely generalise for unseen process variations
+	\begin{itemize}
+		\item Will verify separately for extreme cases from Monte Carlo distribution.
+	\end{itemize}
+	\item Will not be verified against real ICs
+	\item There could exist important design parameters which are not seen in the output signal (e.g. quiescent current, power rating, heat dissipation)
+	\begin{itemize}
+		\item Will do test point insertion to get more information through internal nodes in circuit
+	\end{itemize}
+\end{itemize}
 \paragraph
 {\bf Timeline:}
+
 Feb 7th- Extended Abstract finished
+
 Feb 28th - Dataset generated
+
+Mar 7th- Generate optimized input stimulus
+
 Mar 14th - Design parameter estimation model trained
+
 Mar 28th- RL feedback loop completed
+
 Apr 7th - Results finalized 
+
 Apr 14th- Final Presentation
+
 Apr 25th- Final Report
 
 
