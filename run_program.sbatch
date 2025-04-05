@@ -5,7 +5,7 @@
 #SBATCH -t15                             # Duration of the job (Ex: 15 mins)
 #SBATCH -oReport-%j.out                  # Combined output and error messages file
 #SBATCH --mail-type=BEGIN,END,FAIL       # Mail preferences
-#SBATCH --mail-user=gburdell3@gatech.edu # E-mail address for notifications
+#SBATCH --mail-user=kpawlowski3@gatech.edu # E-mail address for notifications
 cd $SLURM_SUBMIT_DIR                     # Change to working directory
 
 module load anaconda3                    # Load module dependencies
