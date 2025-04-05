@@ -3,16 +3,73 @@ import numpy as np
 from typing import List, Tuple, Dict
 
 import torch
-from torch.nn import LazyLinear
+from torch.nn import LazyLinear, RNN
 from torch_geometric.nn import RGCNConv, GCNConv, GATConv, Linear
 import torch.nn.functional as F
 import torch.optim as optim
+
+from pyearth import Earth
+from sklearn.neural_network import MLPRegressor
 
 from utils import trunc_normal
 
 from IPython.display import clear_output
 import matplotlib.pyplot as plt
 
+class ParameterModel:
+    def parse_data(filename):
+        x = []
+        y = []
+        # TODO
+        return x, y
+    def test_data(self, signal, params, algo='LSS'):
+        if algo == 'LSS':
+            yhat = self.predict(signal)
+            return np.sum((yhat-params)**2)
+        else:
+            raise NotImplementedError()
+    
+class Mars(ParameterModel):
+    def __init__(self):
+        self.model = Earth()
+    def __str__(self):
+        return 'MARS'
+    def train_data(self, signal, params):
+        self.model.fit(signal, params)
+    def predict(self, signal):
+        return self.model.predict(signal)
+    
+            
+class DNN(ParameterModel):
+    def __init__(self, num_params, hidden_layer_sizes, alpha=1e-5):
+        self.model = MLPRegressor(hidden_layer_sizes=hidden_layer_sizes, alpha=alpha)
+        self.hidden_layers = hidden_layer_sizes
+    def __str__(self):
+        return 'DNN\nHidden Layers=' + str(self.hidden_layers)
+    def train_data(self, signal, params):
+        self.model.fit(signal, params)
+    def predict(self, signal):
+        return self.model.predict(signal)
+    
+class RNNParam(ParameterModel):
+    class myRNN(nn.Module):
+        def __init__(self, input_size, hidden_size, output_size):
+            super(myRNN, self).__init__()
+            self.rnn = RNN(input_size, hidden_size)
+            self.h2o = nn.Linear(hidden_size, output_size)
+        def forward(self, signal):
+            rnn_out, hidden = self.rnn(signal)
+            output = self.h2o(hidden[0])
+            return output
+            
+    def __init__(self, num_params, hidden_layer_sizes, input_size):
+        self.model = myRNN(input_size, hidden_layer_sizes, num_params)
+    def __str__(self):
+        return 'RNN'
+    def train_data(self, signal, params):
+        
+        
+        
 class ActorCriticRGCN:
     class Actor(torch.nn.Module):
         def __init__(self, CktGraph):
