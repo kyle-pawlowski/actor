@@ -18,6 +18,14 @@ from IPython.display import clear_output
 import matplotlib.pyplot as plt
 
 class ParameterModel:
+    def __init__(self, learning_rate=0.01, epochs=10):
+        self.learning_rate = learning_rate
+        self.epochs = epochs
+        
+    def __str__(self):
+        return ('\nLearning Rate=' + str(self.learning_rate) + 
+            '\nEpochs= ' + str(self.epochs))
+        
     def parse_data(filename):
         x = []
         y = []
@@ -34,7 +42,7 @@ class Mars(ParameterModel):
     def __init__(self):
         self.model = Earth()
     def __str__(self):
-        return 'MARS'
+        return 'MARS\n' + str(super) 
     def train_data(self, signal, params):
         self.model.fit(signal, params)
     def predict(self, signal):
@@ -46,7 +54,7 @@ class DNN(ParameterModel):
         self.model = MLPRegressor(hidden_layer_sizes=hidden_layer_sizes, alpha=alpha)
         self.hidden_layers = hidden_layer_sizes
     def __str__(self):
-        return 'DNN\nHidden Layers=' + str(self.hidden_layers)
+        return 'DNN\nHidden Layers=' + str(self.hidden_layers) + str(super)
     def train_data(self, signal, params):
         self.model.fit(signal, params)
     def predict(self, signal):
@@ -78,12 +86,17 @@ class myRNN(Module):
             optimizer.zero_grad()
         
 class RNNParam(ParameterModel):
-    def __init__(self, num_params, hidden_layer_sizes, input_size):
+    def __init__(self, num_params, hidden_layer_sizes, input_size, learning_rate=0.01, epochs=10):
+        super(learning_rate, epochs)
         self.model = myRNN(input_size, hidden_layer_sizes, num_params)
+        self.hidden_layers = hidden_layer_sizes
+
     def __str__(self):
-        return 'RNN'
+        return ('RNN\nHidden Layers=' + str(self.hidden_layers) + 
+            str(super))
+    
     def train_data(self, signal, params):
-        self.model.train_data(signal, params)
+        self.model.train_data(signal, params, self.learning_rate)
     def predict(self, signal):
         return self.model.forward(signal)
             
