@@ -3,10 +3,11 @@ import numpy as np
 from typing import List, Tuple, Dict
 
 import torch
-from torch.nn import LazyLinear, RNN
+from torch.nn import LazyLinear, RNN, NLLLoss, Module
 from torch_geometric.nn import RGCNConv, GCNConv, GATConv, Linear
 import torch.nn.functional as F
 import torch.optim as optim
+from torch.nn.utils import clip_grad_norm_
 
 from pyearth import Earth
 from sklearn.neural_network import MLPRegressor
@@ -51,24 +52,41 @@ class DNN(ParameterModel):
     def predict(self, signal):
         return self.model.predict(signal)
     
+class myRNN(Module):
+    def __init__(self, input_size, hidden_size, output_size):
+        super(myRNN, self).__init__()
+        self.rnn = RNN(input_size, hidden_size)
+        self.h2o = Linear(hidden_size, output_size)
+        
+    def forward(self, signal):
+        rnn_out, hidden = self.rnn(signal)
+        output = self.h2o(hidden[0])
+        return output
+
+    def train_data(self, signals, params, learning_rate=0.01, epochs=10):
+        for epoch in range(epochs):
+            criterion = NLLLoss()
+            optimizer = optim.SGD(self.parameters(), lr=learning_rate)
+            total_loss = 0
+            for signal in signals: 
+                pred = self.forward(signal)
+                loss = criterion(pred, params)
+                total_loss += loss
+            total_loss.backward()
+            clip_grad_norm_(self.parameters(), 3)
+            optimizer.step()
+            optimizer.zero_grad()
+        
 class RNNParam(ParameterModel):
-    class myRNN(nn.Module):
-        def __init__(self, input_size, hidden_size, output_size):
-            super(myRNN, self).__init__()
-            self.rnn = RNN(input_size, hidden_size)
-            self.h2o = nn.Linear(hidden_size, output_size)
-        def forward(self, signal):
-            rnn_out, hidden = self.rnn(signal)
-            output = self.h2o(hidden[0])
-            return output
-            
     def __init__(self, num_params, hidden_layer_sizes, input_size):
         self.model = myRNN(input_size, hidden_layer_sizes, num_params)
     def __str__(self):
         return 'RNN'
     def train_data(self, signal, params):
-        
-        
+        self.model.train_data(signal, params)
+    def predict(self, signal):
+        return self.model.forward(signal)
+            
         
 class ActorCriticRGCN:
     class Actor(torch.nn.Module):
