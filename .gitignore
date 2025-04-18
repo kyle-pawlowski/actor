@@ -2,3 +2,5 @@
 /precheck_results/
 */tmp
 */*/tmp
+python/data/
+python/__pycache__/
