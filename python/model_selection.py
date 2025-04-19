@@ -11,6 +11,7 @@ import numpy as np
 from itertools import chain
 import sys
 from multiprocessing import Process
+from sklearn.model_selection import train_test_split
 
 yfile = 'data/ExplorerRun.0_lna_good.csv'
 xfolder = 'data/lna_x'
@@ -57,10 +58,11 @@ if __name__ == "__main__":
     frac_train = 0.8
     num_train = int(len(x) * 0.8)
     num_val = len(x) - num_train
-    xtrain = x[0:num_train]
+    xtrain, xval, ytrain, yval = train_test_split(x, y, test_size=1-frac_train, shuffle=True)
+    '''xtrain = x[0:num_train]
     ytrain = y[0:num_train]
     xval = x[num_train:]
-    yval = y[num_train:]
+    yval = y[num_train:]'''
 
     best_error = 10000
     best_model = None
