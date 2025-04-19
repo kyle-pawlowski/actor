@@ -87,7 +87,7 @@ class ParameterModel:
     
 class Mars(ParameterModel):
     def __init__(self, max_terms=100, max_degree=1, smooth=True):
-        self.model = pyearth.Earth(max_terms=max_terms, max_degree=max_degree, smooth=True)
+        self.model = pyearth.Earth(max_terms=max_terms, max_degree=max_degree, smooth=smooth, verbose=1)
         self.max_degree = max_degree
         self.max_terms = max_terms
     def __str__(self):
