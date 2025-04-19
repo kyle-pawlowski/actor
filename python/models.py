@@ -91,7 +91,7 @@ class Mars(ParameterModel):
         self.max_degree = max_degree
         self.max_terms = max_terms
     def __str__(self):
-        return f'MARS\nMax Degree={self.max_degree}\nMax Terms={self.max_terms}'
+        return f'MARS\nMax Degree={self.max_degree}\nMax Terms={self.max_terms:02f}'
     def train_data(self, signal, params):
         self.model.fit(signal, params)
     def predict(self, signal):
@@ -151,7 +151,7 @@ class RNNParam(ParameterModel):
         self.hidden_layers = hidden_layer_sizes
 
     def __str__(self):
-        return (f'RNN\nHidden Layers= {self.hidden_layers}\nLearning Rate= {self.learning_rate}\nEpochs= {self.epochs}')
+        return (f'RNN\nHidden Layers= {self.hidden_layers}\nLearning Rate= {self.learning_rate:02f}\nEpochs= {self.epochs}')
     
     def train_data(self, signal, params):
         self.model.train_data(signal, params, self.learning_rate, epochs=self.epochs)
