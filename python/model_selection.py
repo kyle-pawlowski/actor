@@ -31,13 +31,13 @@ if __name__ == "__main__":
 
     def DNN_model_gen():
         for lr in np.logspace(-3, -1, 3):
-            yield DNN(output_d, (quarter_d, eighth_d, sixteenth_d, thirtysec_d), lr)
-            yield DNN(output_d, (sixteenth_d, thirtysec_d), lr)
+            yield DNN(output_d, (quarter_d, eighth_d, sixteenth_d, thirtysec_d), lr, max_iter=1000)
+            yield DNN(output_d, (sixteenth_d, thirtysec_d), lr, max_iter=1000)
             
     def RNN_model_gen():
         for lr in np.logspace(-3, -1, 3):
-            yield RNNParam(output_d, thirtysec_d, input_d, learning_rate=lr)
-            yield RNNParam(output_d, thirtysec_d, input_d, learning_rate=lr)
+            yield RNNParam(output_d, thirtysec_d, input_d, learning_rate=lr, epochs=1000)
+            yield RNNParam(output_d, thirtysec_d, input_d, learning_rate=lr, epochs=1000)
             
 
     if 'mars' in str(sys.argv[1]).lower():
