@@ -37,9 +37,10 @@ if __name__ == "__main__":
         for alpha in np.logspace(-3, -1, 6):
             for lr in np.logspace(-4, -2, 6):
                 #yield DNN(output_d, (sixteenth_d, thirtysec_d), alpha=alpha, learning_rate=lr, max_iter=10000)
-                yield DNN(output_d, (quarter_d, eighth_d, sixteenth_d, thirtysec_d), alpha=alpha, learning_rate=lr, max_iter=10000)
+                #yield DNN(output_d, (quarter_d, eighth_d, sixteenth_d, thirtysec_d), alpha=alpha, learning_rate=lr, max_iter=10000)
                 yield DNN(output_d, (quarter_d, eighth_d, sixteenth_d, sixteenth_d, thirtysec_d), alpha=alpha, learning_rate=lr, max_iter=10000)
-                yield DNN(output_d, (quarter_d, quarter_d, eighth_d, eighth_d, sixteenth_d, sixteenth_d, thirtysec_d), alpha=alpha, learning_rate=lr, max_iter=10000)
+                yield DNN(output_d, (quarter_d, eighth_d, sixteenth_d, sixteenth_d, sixteenth_d, thirtysec_d), alpha=alpha, learning_rate=lr, max_iter=10000)
+                yield DNN(output_d, (quarter_d, eighth_d, sixteenth_d, sixteenth_d, thirtysec_d, thirtysec_d), alpha=alpha, learning_rate=lr, max_iter=10000)
             
     def RNN_model_gen():
         for hidden in [half_d, third_d, quarter_d]:
@@ -59,7 +60,7 @@ if __name__ == "__main__":
     frac_train = 0.8
     num_train = int(len(x) * 0.8)
     num_val = len(x) - num_train
-    xtrain, xval, ytrain, yval = train_test_split(x, y, test_size=1-frac_train, shuffle=True)
+    xtrain, xval, ytrain, yval = train_test_split(x, y, test_size=1-frac_train, shuffle=True, random_state=69)
     '''xtrain = x[0:num_train]
     ytrain = y[0:num_train]
     xval = x[num_train:]
