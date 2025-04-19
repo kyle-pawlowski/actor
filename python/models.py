@@ -3,46 +3,90 @@ import numpy as np
 from typing import List, Tuple, Dict
 
 import torch
-from torch.nn import LazyLinear, RNN, NLLLoss, Module
-from torch_geometric.nn import RGCNConv, GCNConv, GATConv, Linear
-import torch.nn.functional as F
+from torch.nn import RNN, NLLLoss, MSELoss, Module#, LazyLinear
+#from torch_geometric.nn import RGCNConv, GCNConv, GATConv, Linear
+from torch_geometric.nn import Linear
+#import torch.nn.functional as F
 import torch.optim as optim
 from torch.nn.utils import clip_grad_norm_
 
-from pyearth import Earth
+import pyearth
 from sklearn.neural_network import MLPRegressor
 
 from utils import trunc_normal
+import os
 
-from IPython.display import clear_output
+#from IPython.display import clear_output
 import matplotlib.pyplot as plt
+import pandas as pd
 
 class ParameterModel:
-    def __init__(self, learning_rate=0.01, epochs=10):
-        self.learning_rate = learning_rate
+    def __init__(self, epochs=10):
         self.epochs = epochs
+    
+    def parse_data_gen(folder_x, file_y):
+        # Parse label file
+        cwd = os.path.dirname(os.path.abspath(__file__))
+        try:
+            y_data = pd.read_csv(os.path.join(cwd, file_y))
+        except: 
+            print('Label file doesn\'t exist: ' + os.path.join(cwd, file_y))
+            
+        # Loop through data files
+        folder_x_path = os.path.join(cwd, folder_x)
+        x_files = [os.path.join(folder_x_path, f) for f in os.listdir(folder_x_path) if os.path.isfile(os.path.join(folder_x_path,f))]
+        for x_file in x_files:
+            filename = os.path.basename(x_file)
+            try:
+                test_num = int((filename.split('_')[1]).split('.')[0]) - 1
+            except IndexError:
+                print('Bad data filename format :' + filename)
+                continue
+            
+            try:
+                x_data = pd.read_csv(x_file)
+            except:
+                print('Data File Doesn\'t Exist: ' + x_file)
+                continue
+            x_volt = np.array(x_data['OUT'])
+            
+            try:
+                y_row = list(y_data['Device']).index(test_num)
+            except ValueError:
+                print('No label for test #' + str(test_num))
+                continue
+            y_labels = np.array(y_data.iloc[y_row])
+            
+            yield (x_volt, y_labels)
         
-    def __str__(self):
-        return ('\nLearning Rate=' + str(self.learning_rate) + 
-            '\nEpochs= ' + str(self.epochs))
+    def parse_data(folder_x, file_y):
+        x_data = None
+        y_data = None
+        for x, y in __class__.parse_data_gen(folder_x, file_y):
+            if x_data is None:
+                x_data = [x]
+                y_data = [y]
+            else:
+                x_data = np.append(x_data, [x], axis=0) 
+                y_data = np.append(y_data, [y], axis=0)
+        return np.array(x_data), np.array(y_data)         
         
-    def parse_data(filename):
-        x = []
-        y = []
-        # TODO
-        return x, y
-    def test_data(self, signal, params, algo='LSS'):
-        if algo == 'LSS':
-            yhat = self.predict(signal)
+    def test_data(self, signal, params, algo='MPE'):
+        yhat = self.predict(signal)
+        if algo == 'MSE':
             return np.sum((yhat-params)**2)
+        elif algo == 'MPE': # mean percent error
+            return np.mean(np.abs((yhat-params)/yhat)) 
         else:
             raise NotImplementedError()
     
 class Mars(ParameterModel):
-    def __init__(self):
-        self.model = Earth()
+    def __init__(self, max_terms=100, max_degree=1):
+        self.model = pyearth.Earth(max_terms=max_terms, max_degree=max_degree)
+        self.max_degree = max_degree
+        self.max_terms = max_terms
     def __str__(self):
-        return 'MARS\n' + str(super) 
+        return f'MARS\nMax Degree={self.max_degree}\nMax Terms={self.max_terms}'
     def train_data(self, signal, params):
         self.model.fit(signal, params)
     def predict(self, signal):
@@ -50,11 +94,13 @@ class Mars(ParameterModel):
     
             
 class DNN(ParameterModel):
-    def __init__(self, num_params, hidden_layer_sizes, alpha=1e-5):
-        self.model = MLPRegressor(hidden_layer_sizes=hidden_layer_sizes, alpha=alpha)
+    def __init__(self, num_params, hidden_layer_sizes, alpha=1e-5, max_iter=200):
+        self.model = MLPRegressor(hidden_layer_sizes=hidden_layer_sizes, alpha=alpha, max_iter=max_iter)
         self.hidden_layers = hidden_layer_sizes
+        self.learning_rate = alpha
+        self.epochs = max_iter
     def __str__(self):
-        return 'DNN\nHidden Layers=' + str(self.hidden_layers) + str(super)
+        return f'DNN\nHidden Layers= {self.hidden_layers}\nLearning Rate= {self.learning_rate}\nEpochs= {self.epochs}'
     def train_data(self, signal, params):
         self.model.fit(signal, params)
     def predict(self, signal):
@@ -67,18 +113,24 @@ class myRNN(Module):
         self.h2o = Linear(hidden_size, output_size)
         
     def forward(self, signal):
+        signal = np.reshape(signal, (1, signal.shape[0],signal.shape[1])) # pytorch expects an extra dimension for batches
+        signal = torch.Tensor(signal)
         rnn_out, hidden = self.rnn(signal)
         output = self.h2o(hidden[0])
         return output
 
     def train_data(self, signals, params, learning_rate=0.01, epochs=10):
         for epoch in range(epochs):
-            criterion = NLLLoss()
+            criterion = MSELoss()
             optimizer = optim.SGD(self.parameters(), lr=learning_rate)
+            
+            preds = self.forward(signals)
+            #preds = torch.Tensor.reshape(preds, (preds.shape[1], preds.shape[0], preds.shape[2]))
+            params = torch.Tensor(params)
+            #params = torch.Tensor(np.reshape(params, (params.shape[0], 1, params.shape[1]))) # pytorch assumes there are batches. 
             total_loss = 0
-            for signal in signals: 
-                pred = self.forward(signal)
-                loss = criterion(pred, params)
+            for pred, param in zip(preds, params):
+                loss = criterion(pred, param)
                 total_loss += loss
             total_loss.backward()
             clip_grad_norm_(self.parameters(), 3)
@@ -87,21 +139,22 @@ class myRNN(Module):
         
 class RNNParam(ParameterModel):
     def __init__(self, num_params, hidden_layer_sizes, input_size, learning_rate=0.01, epochs=10):
-        super(learning_rate, epochs)
+        super().__init__(epochs)
+        self.learning_rate = learning_rate
         self.model = myRNN(input_size, hidden_layer_sizes, num_params)
         self.hidden_layers = hidden_layer_sizes
 
     def __str__(self):
-        return ('RNN\nHidden Layers=' + str(self.hidden_layers) + 
-            str(super))
+        return (f'RNN\nHidden Layers= {self.hidden_layers}\nLearning Rate= {self.learning_rate}\nEpochs= {self.epochs}')
     
     def train_data(self, signal, params):
         self.model.train_data(signal, params, self.learning_rate)
+    
     def predict(self, signal):
-        return self.model.forward(signal)
+        return self.model.forward(signal).detach().numpy()
             
         
-class ActorCriticRGCN:
+'''class ActorCriticRGCN:
     class Actor(torch.nn.Module):
         def __init__(self, CktGraph):
             super().__init__()
@@ -420,4 +473,4 @@ class ActorCriticMLP:
                 x = self.lin1(torch.flatten(x)).reshape(1, -1)
                 values = torch.cat((values, x), axis=0)
     
-            return values
+            return values'''
