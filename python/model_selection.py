@@ -29,7 +29,7 @@ if __name__ == "__main__":
     thirtysec_d = int(input_d/32)
 
     def Mars_model_gen():
-        for max_degree in [1, 2, 3]:
+        for max_degree in [1, 3, 6]:
             for max_terms in np.linspace(20, 30, 10):
                 yield Mars(max_terms=max_terms, max_degree=max_degree, smooth=True)
 
