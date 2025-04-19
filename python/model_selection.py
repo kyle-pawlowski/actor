@@ -30,7 +30,7 @@ if __name__ == "__main__":
 
     def Mars_model_gen():
         for max_degree in [1]:
-            for max_terms in np.linspace(20, 60, 10):
+            for max_terms in np.linspace(20, 30, 10):
                 yield Mars(max_terms=max_terms, max_degree=max_degree)
 
     def DNN_model_gen():
