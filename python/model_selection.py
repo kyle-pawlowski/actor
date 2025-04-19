@@ -44,7 +44,7 @@ if __name__ == "__main__":
             
     def RNN_model_gen():
         for hidden in [quarter_d]:
-            for lr in np.linspace(0.006, 0.4, 6):
+            for lr in np.linspace(0.01, 0.02, 10):
                 yield RNNParam(output_d, hidden, input_d, learning_rate=lr, epochs=10000)
             
 
