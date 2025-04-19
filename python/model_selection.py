@@ -27,7 +27,7 @@ if __name__ == "__main__":
 
     def Mars_model_gen():
         for max_degree in range(1, 4):
-            for max_terms in np.logspace(2, 4, 3):
+            for max_terms in np.logspace(1, 2, 6):
                 yield Mars(max_terms=max_terms, max_degree=max_degree)
 
     def DNN_model_gen():
