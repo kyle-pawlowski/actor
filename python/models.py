@@ -20,6 +20,11 @@ import os
 import matplotlib.pyplot as plt
 import pandas as pd
 
+import warnings
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
+
 class ParameterModel:
     def __init__(self, epochs=10):
         self.epochs = epochs
