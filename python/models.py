@@ -148,7 +148,7 @@ class RNNParam(ParameterModel):
         return (f'RNN\nHidden Layers= {self.hidden_layers}\nLearning Rate= {self.learning_rate}\nEpochs= {self.epochs}')
     
     def train_data(self, signal, params):
-        self.model.train_data(signal, params, self.learning_rate)
+        self.model.train_data(signal, params, self.learning_rate, epochs=self.epochs)
     
     def predict(self, signal):
         return self.model.forward(signal).detach().numpy()
