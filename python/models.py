@@ -63,7 +63,21 @@ class ParameterModel:
             y_labels = np.array(y_data.iloc[y_row])
             
             yield (x_volt, y_labels)
-        
+    
+    def normalize_data(self, x, y):
+        x = (x-self.xmean)/self.xvar
+        y = (y-self.ymean)/self.yvar
+        return x, y
+
+    def train_data(self, x, y, normalize=False):
+        self.normalize = normalize
+        if normalize:
+            self.xmean = np.mean(x, axis=0)
+            self.xvar = np.var(x, axis=0)
+            self.ymean = np.mean(y, axis=0)
+            self.yvar = np.var(y, axis=0)
+            x, y = self.normalize_data(x, y)
+
     def parse_data(folder_x, file_y):
         x_data = None
         y_data = None
@@ -77,7 +91,11 @@ class ParameterModel:
         return np.array(x_data), np.array(y_data)         
         
     def test_data(self, signal, params, algo='MPE'):
-        yhat = self.predict(signal)
+        signal_copy = np.copy(signal) # don't overwrite original data if we normalize it
+        params_copy = np.copy(params)
+        if self.normalize:
+            self.normalize_data(signal_copy, params_copy)
+        yhat = (self.predict(signal_copy)*self.yvar)+self.ymean # reverse y normalization
         if algo == 'MSE':
             return np.sum((yhat-params)**2)
         elif algo == 'MPE': # mean percent error
@@ -92,8 +110,11 @@ class Mars(ParameterModel):
         self.max_terms = max_terms
     def __str__(self):
         return f'MARS\nMax Degree={self.max_degree}\nMax Terms={self.max_terms:02f}'
-    def train_data(self, signal, params):
-        self.model.fit(signal, params)
+    def train_data(self, signal, params, normalize=False):
+        signal_copy = np.copy(signal) # don't overwrite original data if we normalize it
+        params_copy = np.copy(params)
+        super().train_data(signal_copy, params_copy, normalize)
+        self.model.fit(signal_copy, params_copy)
     def predict(self, signal):
         return self.model.predict(signal)
     
@@ -107,8 +128,11 @@ class DNN(ParameterModel):
         self.epochs = max_iter
     def __str__(self):
         return f'DNN\nHidden Layers= {self.hidden_layers}\nLearning Rate= {self.learning_rate}\nRegularization= {self.alpha}\nEpochs= {self.epochs}'
-    def train_data(self, signal, params):
-        self.model.fit(signal, params)
+    def train_data(self, signal, params, normalize=False):
+        signal_copy = np.copy(signal) # don't overwrite original data if we normalize it
+        params_copy = np.copy(params)
+        super().train_data(signal_copy, params_copy, normalize)
+        self.model.fit(signal_copy, params_copy)
     def predict(self, signal):
         return self.model.predict(signal)
     
@@ -153,8 +177,11 @@ class RNNParam(ParameterModel):
     def __str__(self):
         return (f'RNN\nHidden Layers= {self.hidden_layers}\nLearning Rate= {self.learning_rate:02f}\nEpochs= {self.epochs}')
     
-    def train_data(self, signal, params):
-        self.model.train_data(signal, params, self.learning_rate, epochs=self.epochs)
+    def train_data(self, signal, params, normalize):
+        signal_copy = np.copy(signal) # don't overwrite original data if we normalize it
+        params_copy = np.copy(params)
+        super().train_data(signal_copy, params_copy, normalize)
+        self.model.train_data(signal_copy, params_copy, self.learning_rate, epochs=self.epochs)
     
     def predict(self, signal):
         return self.model.forward(signal).detach().numpy()
