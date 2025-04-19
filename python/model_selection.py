@@ -26,8 +26,8 @@ if __name__ == "__main__":
     thirtysec_d = int(input_d/32)
 
     def Mars_model_gen():
-        for max_degree in range(1, 4):
-            for max_terms in np.logspace(1, 2, 6):
+        for max_degree in [1, 10]:
+            for max_terms in np.logspace(0, 2, 10):
                 yield Mars(max_terms=max_terms, max_degree=max_degree)
 
     def DNN_model_gen():
