@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -JDNN Model Selection            # Job name
+#SBATCH -JDNN_Model_Selection            # Job name
 #SBATCH -N1 --ntasks-per-node=4          # Number of nodes and cores per node required
 #SBATCH --mem-per-cpu=1G                 # Memory per core
 #SBATCH -t15                             # Duration of the job (Ex: 15 mins)
