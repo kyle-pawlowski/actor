@@ -30,14 +30,14 @@ if __name__ == "__main__":
                 yield Mars(max_terms=max_terms, max_degree=max_degree)
 
     def DNN_model_gen():
-        for lr in np.logspace(-3, -1, 3):
+        for lr in np.logspace(-3, -1, 6):
             yield DNN(output_d, (quarter_d, eighth_d, sixteenth_d, thirtysec_d), lr, max_iter=1000)
             yield DNN(output_d, (sixteenth_d, thirtysec_d), lr, max_iter=1000)
             
     def RNN_model_gen():
-        for lr in np.logspace(-3, -1, 3):
-            yield RNNParam(output_d, thirtysec_d, input_d, learning_rate=lr, epochs=1000)
-            yield RNNParam(output_d, thirtysec_d, input_d, learning_rate=lr, epochs=1000)
+        for hidden in [quarter_d, eighth_d, sixteenth_d, thirtysec_d]:
+            for lr in np.logspace(-3, -1, 6):
+                yield RNNParam(output_d, hidden, input_d, learning_rate=lr, epochs=1000)
             
 
     if 'mars' in str(sys.argv[1]).lower():
@@ -63,11 +63,15 @@ if __name__ == "__main__":
     for model in models:
         model.train_data(xtrain, ytrain)
         error = model.test_data(xval, yval)*100
+        print('================')
         print(f'Model {model}\nTest Error: {error:0.2f}%')
+        print('================')
         if error < best_error:
             best_error = error
             best_model = model
 
+    print('*****************')
     print('Best model is: ' + str(best_model))
     print(f'Error of: {best_error:0.2f}%')
+    print('*****************')
 
