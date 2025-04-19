@@ -20,6 +20,8 @@ if __name__ == "__main__":
     n = x.shape[0]
     input_d = x.shape[1]
     output_d = y.shape[1]
+    half_d = int(input_d/2)
+    third_d = int(input_d/3)
     quarter_d = int(input_d/4)
     eighth_d = int(input_d/8)
     sixteenth_d = int(input_d/16)
@@ -33,12 +35,13 @@ if __name__ == "__main__":
     def DNN_model_gen():
         for alpha in np.logspace(-3, -1, 6):
             for lr in np.logspace(-4, -2, 6):
+                yield DNN(output_d, (sixteenth_d, thirtysec_d), alpha=alpha, learning_rate=lr, max_iter=10000)
                 yield DNN(output_d, (quarter_d, eighth_d, sixteenth_d, thirtysec_d), alpha=alpha, learning_rate=lr, max_iter=10000)
-                yield DNN(output_d, (quarter_d, eighth_d, sixteenth_d, sixteenth_d, thirtysec_d), lr, max_iter=10000)
+                yield DNN(output_d, (quarter_d, eighth_d, sixteenth_d, sixteenth_d, thirtysec_d), alpha=alpha, learning_rate=lr, max_iter=10000)
             
     def RNN_model_gen():
-        for hidden in [quarter_d, eighth_d, sixteenth_d, thirtysec_d]:
-            for lr in np.logspace(-3, -1, 6):
+        for hidden in [half_d, third_d, quarter_d]:
+            for lr in np.linspace(0.006, 0.4, 6):
                 yield RNNParam(output_d, hidden, input_d, learning_rate=lr, epochs=10000)
             
 
