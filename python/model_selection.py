@@ -43,7 +43,7 @@ if __name__ == "__main__":
                 yield DNN(output_d, (quarter_d, eighth_d, sixteenth_d, sixteenth_d, thirtysec_d, thirtysec_d), alpha=alpha, learning_rate=lr, max_iter=10000)
             
     def RNN_model_gen():
-        for hidden in [half_d, third_d, quarter_d]:
+        for hidden in [quarter_d]:
             for lr in np.linspace(0.006, 0.4, 6):
                 yield RNNParam(output_d, hidden, input_d, learning_rate=lr, epochs=10000)
             
