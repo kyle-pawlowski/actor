@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -JMars Model Selection           # Job name
+#SBATCH -JRNN Model Selection            # Job name
 #SBATCH -N1 --ntasks-per-node=4          # Number of nodes and cores per node required
 #SBATCH --mem-per-cpu=1G                 # Memory per core
 #SBATCH -t15                             # Duration of the job (Ex: 15 mins)
@@ -10,4 +10,4 @@ cd $SLURM_SUBMIT_DIR                     # Change to working directory
 
 module load anaconda3                    # Load module dependencies
 conda activate actor
-srun python python/model_selection.py mars                    # Example Process
+srun python python/model_selection.py rnn                  
