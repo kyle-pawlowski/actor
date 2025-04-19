@@ -63,9 +63,10 @@ if __name__ == "__main__":
     #errors = np.zeros(len(models), 1)
     for model in models:
         model.train_data(xtrain, ytrain)
+        train_error = model.test_data(xtrain, ytrain)*100
         error = model.test_data(xval, yval)*100
         print('================')
-        print(f'Model {model}\nTest Error: {error:0.2f}%')
+        print(f'Model {model}\nTrain Error: {train_error:0.2f}% Test Error: {error:0.2f}%')
         print('================')
         if error < best_error:
             best_error = error
