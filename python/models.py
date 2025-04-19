@@ -104,12 +104,15 @@ class ParameterModel:
             raise NotImplementedError()
     
 class Mars(ParameterModel):
-    def __init__(self, max_terms=100, max_degree=1, smooth=True):
-        self.model = pyearth.Earth(max_terms=max_terms, max_degree=max_degree, smooth=smooth, verbose=1)
+    def __init__(self, max_terms=100, max_degree=1, smooth=True, minspan=-1):
+        self.model = pyearth.Earth(max_terms=max_terms, max_degree=max_degree, smooth=smooth, verbose=1, minspan=minspan)
         self.max_degree = max_degree
         self.max_terms = max_terms
+        self.smooth = smooth
+        self.minspan = minspan
+
     def __str__(self):
-        return f'MARS\nMax Degree={self.max_degree}\nMax Terms={self.max_terms:02f}'
+        return f'MARS\nMax Degree={self.max_degree}\nMax Terms={self.max_terms:02f}\nSmoothed:{self.smooth}\nMinspan:{self.minspan}'
     def train_data(self, signal, params, normalize=False):
         signal_copy = np.copy(signal) # don't overwrite original data if we normalize it
         params_copy = np.copy(params)
