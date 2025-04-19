@@ -99,13 +99,14 @@ class Mars(ParameterModel):
     
             
 class DNN(ParameterModel):
-    def __init__(self, num_params, hidden_layer_sizes, alpha=1e-5, max_iter=200):
+    def __init__(self, num_params, hidden_layer_sizes, learning_rate=0.001, alpha=0.001, max_iter=200):
         self.model = MLPRegressor(hidden_layer_sizes=hidden_layer_sizes, alpha=alpha, max_iter=max_iter)
         self.hidden_layers = hidden_layer_sizes
-        self.learning_rate = alpha
+        self.alpha= alpha
+        self.learning_rate = learning_rate
         self.epochs = max_iter
     def __str__(self):
-        return f'DNN\nHidden Layers= {self.hidden_layers}\nLearning Rate= {self.learning_rate}\nEpochs= {self.epochs}'
+        return f'DNN\nHidden Layers= {self.hidden_layers}\nLearning Rate= {self.learning_rate}\nRegularization= {self.alpha}\nEpochs= {self.epochs}'
     def train_data(self, signal, params):
         self.model.fit(signal, params)
     def predict(self, signal):
