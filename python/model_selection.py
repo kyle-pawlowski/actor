@@ -36,9 +36,10 @@ if __name__ == "__main__":
     def DNN_model_gen():
         for alpha in np.logspace(-3, -1, 6):
             for lr in np.logspace(-4, -2, 6):
-                yield DNN(output_d, (sixteenth_d, thirtysec_d), alpha=alpha, learning_rate=lr, max_iter=10000)
+                #yield DNN(output_d, (sixteenth_d, thirtysec_d), alpha=alpha, learning_rate=lr, max_iter=10000)
                 yield DNN(output_d, (quarter_d, eighth_d, sixteenth_d, thirtysec_d), alpha=alpha, learning_rate=lr, max_iter=10000)
                 yield DNN(output_d, (quarter_d, eighth_d, sixteenth_d, sixteenth_d, thirtysec_d), alpha=alpha, learning_rate=lr, max_iter=10000)
+                yield DNN(output_d, (quarter_d, quarter_d, eighth_d, eighth_d, sixteenth_d, sixteenth_d, thirtysec_d), alpha=alpha, learning_rate=lr, max_iter=10000)
             
     def RNN_model_gen():
         for hidden in [half_d, third_d, quarter_d]:
