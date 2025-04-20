@@ -29,10 +29,11 @@ if __name__ == "__main__":
     thirtysec_d = int(input_d/32)
 
     def Mars_model_gen():
-        for max_degree in [1]:
-            for max_terms in np.linspace(10, 30, 9):
-                for minspan in [-1, 1, 2, 3]:
-                    yield Mars(max_terms=max_terms, max_degree=max_degree, smooth=False, minspan=minspan, prune=False)
+        for prune in [True, False]:
+            for max_degree in [1]:
+                for max_terms in np.linspace(10, 30, 9):
+                    for minspan in [-1, 1, 2, 3]:
+                        yield Mars(max_terms=max_terms, max_degree=max_degree, smooth=False, minspan=minspan, prune=prune)
 
     def DNN_model_gen():
         for alpha in np.logspace(-4, -1, 6):
