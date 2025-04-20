@@ -95,7 +95,7 @@ class ParameterModel:
         params_copy = np.copy(params)
         if self.normalize:
             self.normalize_data(signal_copy, params_copy)
-        yhat = (self.predict(signal_copy)*self.yvar)+self.ymean # reverse y normalization
+        yhat = self.predict(signal_copy)+self.ymean # reverse y normalization
         if algo == 'MSE':
             return np.sum((yhat-params)**2)
         elif algo == 'MPE': # mean percent error
