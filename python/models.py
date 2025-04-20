@@ -176,9 +176,10 @@ class RNNParam(ParameterModel):
         self.learning_rate = learning_rate
         self.model = myRNN(input_size, hidden_layer_sizes, num_params, num_layers=num_layers)
         self.hidden_layers = hidden_layer_sizes
+        self.num_layers = num_layers
 
     def __str__(self):
-        return (f'RNN\nHidden Layers= {self.hidden_layers}\nLearning Rate= {self.learning_rate:02f}\nEpochs= {self.epochs}')
+        return (f'RNN\nHidden Layers= {self.hidden_layers}\nLearning Rate= {self.learning_rate:02f}\nEpochs= {self.epochs}\nNum Layers= {self.num_layers}')
     
     def train_data(self, signal, params, normalize):
         signal_copy = np.copy(signal) # don't overwrite original data if we normalize it
