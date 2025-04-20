@@ -44,9 +44,10 @@ if __name__ == "__main__":
                 yield DNN(output_d, (quarter_d, eighth_d, sixteenth_d, sixteenth_d, thirtysec_d, thirtysec_d), alpha=alpha, learning_rate=lr, max_iter=10000)
             
     def RNN_model_gen():
-        for hidden in [quarter_d]:
-            for lr in np.linspace(0.01, 0.02, 10):
-                yield RNNParam(output_d, hidden, input_d, learning_rate=lr, epochs=10000)
+        for layers in [1, 2, 3, 4]:
+            for hidden in [quarter_d, eighth_d]:
+                for lr in np.linspace(0.01, 0.02, 4):
+                    yield RNNParam(output_d, hidden, input_d, learning_rate=lr, num_layers=layers, epochs=10000)
             
 
     if 'mars' in str(sys.argv[1]).lower():

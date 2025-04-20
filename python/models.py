@@ -73,9 +73,9 @@ class ParameterModel:
         self.normalize = normalize
         if normalize:
             self.xmean = np.mean(x, axis=0)
-            self.xvar = np.var(x, axis=0)
+            #self.xvar = np.var(x, axis=0)
             self.ymean = np.mean(y, axis=0)
-            self.yvar = np.var(y, axis=0)
+            #self.yvar = np.var(y, axis=0)
             x, y = self.normalize_data(x, y)
 
     def parse_data(folder_x, file_y):
@@ -140,9 +140,9 @@ class DNN(ParameterModel):
         return self.model.predict(signal)
     
 class myRNN(Module):
-    def __init__(self, input_size, hidden_size, output_size):
+    def __init__(self, input_size, hidden_size, output_size, num_layers=1):
         super(myRNN, self).__init__()
-        self.rnn = RNN(input_size, hidden_size)
+        self.rnn = RNN(input_size, hidden_size, num_layers=num_layers)
         self.h2o = Linear(hidden_size, output_size)
         
     def forward(self, signal):
@@ -171,10 +171,10 @@ class myRNN(Module):
             optimizer.zero_grad()
         
 class RNNParam(ParameterModel):
-    def __init__(self, num_params, hidden_layer_sizes, input_size, learning_rate=0.01, epochs=10):
+    def __init__(self, num_params, hidden_layer_sizes, input_size, learning_rate=0.01, epochs=10, num_layers=1):
         super().__init__(epochs)
         self.learning_rate = learning_rate
-        self.model = myRNN(input_size, hidden_layer_sizes, num_params)
+        self.model = myRNN(input_size, hidden_layer_sizes, num_params, num_layers=num_layers)
         self.hidden_layers = hidden_layer_sizes
 
     def __str__(self):
