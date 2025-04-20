@@ -65,7 +65,7 @@ class ParameterModel:
             yield (x_volt, y_labels)
     
     def normalize_data(self, x, y):
-        x = (x-self.xmean)
+        #x = (x-self.xmean)
         y = (y-self.ymean)
         return x, y
 
