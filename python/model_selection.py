@@ -72,6 +72,7 @@ if __name__ == "__main__":
     yval = y[num_train:]'''
 
     best_error = 10000
+    best_train_error = 0
     best_r2 = 1
     best_model = None
     normalize = False
@@ -86,12 +87,14 @@ if __name__ == "__main__":
         print('================')
         if error < best_error:
             best_error = error
+            best_train_error = train_error
             best_model = model
             best_r2 = r2 # assumming model with best error has the best R2 value
 
     print('*****************')
     print('Best model is: ' + str(best_model))
     print(f'Error of: {best_error:0.2f}%')
+    print(f'Train Error: {best_train_error:0.2f}%')
     print(f'R\u00b2 of: {r2:0.2f}')
     print('*****************')
 
