@@ -100,6 +100,10 @@ class ParameterModel:
             return np.sum((yhat-params)**2)
         elif algo == 'MPE': # mean percent error
             return np.mean(np.abs((yhat-params)/yhat)) 
+        elif algo == 'R2': # R squared
+            ss_res = np.sum((yhat-params)**2)
+            ss_total = np.sum((params - np.mean(params, axis=0))**2)
+            return 1 - (ss_res/ss_total)
         else:
             raise NotImplementedError()
     

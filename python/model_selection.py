@@ -70,6 +70,7 @@ if __name__ == "__main__":
     yval = y[num_train:]'''
 
     best_error = 10000
+    best_r2 = 1
     best_model = None
     normalize = False
     #errors = np.zeros(len(models), 1)
@@ -77,15 +78,18 @@ if __name__ == "__main__":
         model.train_data(xtrain, ytrain, normalize)
         train_error = model.test_data(xtrain, ytrain)*100
         error = model.test_data(xval, yval)*100
+        r2 = model.test_data(xval, yval, algo='R2')
         print('================')
-        print(f'Model {model}\nNormalizing: {normalize}\nTrain Error: {train_error:0.2f}% Test Error: {error:0.2f}%')
+        print(f'Model {model}\nNormalizing: {normalize}\nTrain Error: {train_error:0.2f}% Test Error: {error:0.2f}% Test R\u00b2: {r2:0.2f}')
         print('================')
         if error < best_error:
             best_error = error
             best_model = model
+            best_r2 = r2 # assumming model with best error has the best R2 value
 
     print('*****************')
     print('Best model is: ' + str(best_model))
     print(f'Error of: {best_error:0.2f}%')
+    print(f'R\u00b2 of: {r2:0.2f}')
     print('*****************')
 
