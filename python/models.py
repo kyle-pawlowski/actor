@@ -135,7 +135,7 @@ class DNN(ParameterModel):
         self.learning_rate = learning_rate
         self.epochs = max_iter
     def __str__(self):
-        return f'DNN\nHidden Layers= {self.hidden_layers}\nLearning Rate= {self.learning_rate:0.2f}\nRegularization= {self.alpha:0.2f}\nEpochs= {self.epochs}'
+        return f'DNN\nHidden Layers= {self.hidden_layers}\nLearning Rate= {self.learning_rate}\nRegularization= {self.alpha}\nEpochs= {self.epochs}'
     def train_data(self, signal, params, normalize=False):
         signal_copy = np.copy(signal) # don't overwrite original data if we normalize it
         params_copy = np.copy(params)
@@ -184,7 +184,7 @@ class RNNParam(ParameterModel):
         self.num_layers = num_layers
 
     def __str__(self):
-        return (f'RNN\nHidden Layers= {self.hidden_layers}\nLearning Rate= {self.learning_rate:0.2f}\nEpochs= {self.epochs}\nNum Layers= {self.num_layers}')
+        return (f'RNN\nHidden Layers= {self.hidden_layers}\nLearning Rate= {self.learning_rate}\nEpochs= {self.epochs}\nNum Layers= {self.num_layers}')
     
     def train_data(self, signal, params, normalize):
         signal_copy = np.copy(signal) # don't overwrite original data if we normalize it
