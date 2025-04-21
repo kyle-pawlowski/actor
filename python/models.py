@@ -145,9 +145,9 @@ class DNN(ParameterModel):
         return self.model.predict(signal)
     
 class myRNN(Module):
-    def __init__(self, input_size, hidden_size, output_size, num_layers=1):
+    def __init__(self, input_size, hidden_size, output_size, num_layers=1, dropout=0):
         super(myRNN, self).__init__()
-        self.rnn = RNN(input_size, hidden_size, num_layers=num_layers)
+        self.rnn = RNN(input_size, hidden_size, num_layers=num_layers, dropout=dropout)
         self.h2o = Linear(hidden_size, output_size)
         
     def forward(self, signal):
@@ -176,15 +176,16 @@ class myRNN(Module):
             optimizer.zero_grad()
         
 class RNNParam(ParameterModel):
-    def __init__(self, num_params, hidden_layer_sizes, input_size, learning_rate=0.01, epochs=10, num_layers=1):
+    def __init__(self, num_params, hidden_layer_sizes, input_size, learning_rate=0.01, epochs=10, num_layers=1, dropout=0):
         super().__init__(epochs)
         self.learning_rate = learning_rate
-        self.model = myRNN(input_size, hidden_layer_sizes, num_params, num_layers=num_layers)
+        self.model = myRNN(input_size, hidden_layer_sizes, num_params, num_layers=num_layers, dropout=dropout)
         self.hidden_layers = hidden_layer_sizes
         self.num_layers = num_layers
+        self.dropout = dropout
 
     def __str__(self):
-        return (f'RNN\nHidden Layers= {self.hidden_layers}\nLearning Rate= {self.learning_rate}\nEpochs= {self.epochs}\nNum Layers= {self.num_layers}')
+        return (f'RNN\nHidden Layers= {self.hidden_layers}\nLearning Rate= {self.learning_rate}\nEpochs= {self.epochs}\nNum Layers= {self.num_layers}\nDropout={self.dropout}')
     
     def train_data(self, signal, params, normalize):
         signal_copy = np.copy(signal) # don't overwrite original data if we normalize it
