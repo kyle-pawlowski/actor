@@ -48,7 +48,7 @@ if __name__ == "__main__":
         for layers in [1, 2, 3]:
             for hidden in [quarter_d]:
                 for lr in np.linspace(0.01, 0.02, 4):
-                    yield RNNParam(output_d, hidden, input_d, learning_rate=lr, num_layers=layers, epochs=1000)
+                    yield RNNParam(output_d, hidden, input_d, learning_rate=lr, num_layers=layers, epochs=10000)
             
 
     if 'mars' in str(sys.argv[1]).lower():
