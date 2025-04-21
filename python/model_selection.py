@@ -71,7 +71,7 @@ if __name__ == "__main__":
 
     best_error = 10000
     best_model = None
-    normalize = True
+    normalize = False
     #errors = np.zeros(len(models), 1)
     for model in models:
         model.train_data(xtrain, ytrain, normalize)
