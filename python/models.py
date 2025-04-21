@@ -117,7 +117,7 @@ class Mars(ParameterModel):
         self.prune = prune 
 
     def __str__(self):
-        return f'MARS\nMax Degree={self.max_degree}\nMax Terms={self.max_terms:02f}\nSmoothed:{self.smooth}\nMinspan:{self.minspan}\nPruning:{self.prune}'
+        return f'MARS\nMax Degree={self.max_degree}\nMax Terms={self.max_terms:0.2f}\nSmoothed:{self.smooth}\nMinspan:{self.minspan}\nPruning:{self.prune}'
     def train_data(self, signal, params, normalize=False):
         signal_copy = np.copy(signal) # don't overwrite original data if we normalize it
         params_copy = np.copy(params)
@@ -135,7 +135,7 @@ class DNN(ParameterModel):
         self.learning_rate = learning_rate
         self.epochs = max_iter
     def __str__(self):
-        return f'DNN\nHidden Layers= {self.hidden_layers}\nLearning Rate= {self.learning_rate}\nRegularization= {self.alpha}\nEpochs= {self.epochs}'
+        return f'DNN\nHidden Layers= {self.hidden_layers}\nLearning Rate= {self.learning_rate:0.2f}\nRegularization= {self.alpha:0.2f}\nEpochs= {self.epochs}'
     def train_data(self, signal, params, normalize=False):
         signal_copy = np.copy(signal) # don't overwrite original data if we normalize it
         params_copy = np.copy(params)
@@ -184,7 +184,7 @@ class RNNParam(ParameterModel):
         self.num_layers = num_layers
 
     def __str__(self):
-        return (f'RNN\nHidden Layers= {self.hidden_layers}\nLearning Rate= {self.learning_rate:02f}\nEpochs= {self.epochs}\nNum Layers= {self.num_layers}')
+        return (f'RNN\nHidden Layers= {self.hidden_layers}\nLearning Rate= {self.learning_rate:0.2f}\nEpochs= {self.epochs}\nNum Layers= {self.num_layers}')
     
     def train_data(self, signal, params, normalize):
         signal_copy = np.copy(signal) # don't overwrite original data if we normalize it
