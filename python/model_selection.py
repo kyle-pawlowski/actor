@@ -66,7 +66,7 @@ if __name__ == "__main__":
     frac_train = 0.8
     num_train = int(len(x) * 0.8)
     num_val = len(x) - num_train
-    xtrain, xval, ytrain, yval = train_test_split(x, y, test_size=1-frac_train, shuffle=True, random_state=69)
+    xtrain, xval, ytrain, yval = train_test_split(x, y, test_size=1-frac_train, shuffle=False, random_state=69)
     '''xtrain = x[0:num_train]
     ytrain = y[0:num_train]
     xval = x[num_train:]
