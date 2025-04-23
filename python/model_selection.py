@@ -37,8 +37,8 @@ if __name__ == "__main__":
                             yield Mars(max_terms=max_terms, max_degree=max_degree, smooth=smooth, minspan=minspan, prune=prune)
 
     def DNN_model_gen():
-        for alpha in np.linspace(0.002, 0.004, 20):
-            for lr in np.linspace(0.002, 0.004, 20):
+        for alpha in np.linspace(0.001, 0.003, 20):
+            for lr in np.linspace(0.003, 0.005, 20):
                 #yield DNN(output_d, (sixteenth_d, thirtysec_d), alpha=alpha, learning_rate=lr, max_iter=10000)
                 #yield DNN(output_d, (quarter_d, eighth_d, sixteenth_d, thirtysec_d), alpha=alpha, learning_rate=lr, max_iter=10000)
                 yield DNN(output_d, (quarter_d, eighth_d, sixteenth_d, sixteenth_d, thirtysec_d), alpha=alpha, learning_rate=lr, max_iter=10000)
